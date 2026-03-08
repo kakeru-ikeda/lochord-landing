@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Lochord Guide — How to use Lochord to manage your music library and create M3U8 playlists for DAP." />
+  <title data-i18n="meta.title">Lochord — How to Use</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSJ1cmwoI2cpIi8+PHJlY3QgeD0iMjAiIHk9IjMwIiB3aWR0aD0iMTIiIGhlaWdodD0iNTAiIHJ4PSI0IiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjM4IiB5PSIxOCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjYyIiByeD0iNCIgZmlsbD0id2hpdGUiIG9wYWNpdHk9Ii45Ii8+PHJlY3QgeD0iNTYiIHk9IjQwIiB3aWR0aD0iMTIiIGhlaWdodD0iNDIiIHJ4PSI0IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iLjgiLz48cmVjdCB4PSI3NCIgeT0iMjUiIHdpZHRoPSIxMiIgaGVpZ2h0PSI1NSIgcng9IjQiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIuNyIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMTAwIiB5Mj0iMTAwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzRGNDZFNSIvPjxzdG9wIG9mZnNldD0iLjUiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNFQzQ4OTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4=">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #1a1a2e;
+      --surface:  #16213e;
+      --surface2: #0f1729;
+      --accent:   #e94560;
+      --accent-h: #ff5577;
+      --text:     #e0e0e0;
+      --muted:    #8892a4;
+      --border:   #2d3748;
+      --grad:     linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+      --radius:   10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Nav (shared) ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(26,26,46,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .nav-brand svg { width: 32px; height: 32px; flex-shrink: 0; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+    .nav-links a.active { color: var(--text); }
+    .nav-links .btn-primary,
+    .nav-links .btn-primary:hover { color: #fff; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent-h); transform: translateY(-1px); }
+
+    /* Language switcher */
+    .lang-switcher { position: relative; margin-left: 4px; }
+
+    .lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.10); border-color: var(--muted); }
+    .lang-btn svg { opacity: 0.6; transition: transform 0.2s; }
+    .lang-switcher.open .lang-btn svg { transform: rotate(180deg); }
+
+    .lang-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      min-width: 130px;
+      z-index: 200;
+    }
+    .lang-switcher.open .lang-menu { display: block; }
+
+    .lang-menu button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 9px 14px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .lang-menu button:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+    .lang-menu button.active { color: var(--accent); background: rgba(233,69,96,0.08); }
+
+    /* ── Page layout ── */
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .page-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .gradient-text {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-header p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 56px;
+    }
+
+    .toc-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .toc ol {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .toc li a {
+      display: block;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .toc li a:hover { color: var(--accent); border-color: rgba(233,69,96,0.4); }
+
+    /* ── Steps ── */
+    .step {
+      margin-bottom: 60px;
+      scroll-margin-top: 80px;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--grad);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .step > p, .step > ul, .step > ol {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .step ul, .step ol {
+      padding-left: 20px;
+    }
+
+    .step li { margin-bottom: 6px; }
+
+    .step strong { color: var(--text); }
+
+    .step-tip {
+      background: rgba(233,69,96,0.08);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 16px;
+    }
+    .step-tip strong { color: var(--accent); }
+
+    /* ── Mockup windows ── */
+    .mockup {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+      font-size: 0.82rem;
+    }
+
+    .mockup-bar {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dot-r { background: #ff5f56; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #27c93f; }
+
+    .mockup-title { flex: 1; text-align: center; font-size: 0.78rem; color: var(--muted); }
+
+    .mockup-body { padding: 16px 20px; }
+
+    .onboard-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 32px 20px;
+      text-align: center;
+    }
+
+    .onboard-icon { font-size: 2.8rem; }
+    .onboard-title { font-size: 1rem; font-weight: 700; }
+    .onboard-sub   { font-size: 0.82rem; color: var(--muted); max-width: 320px; }
+
+    .fake-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 7px;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .ui-two-col {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+    }
+
+    .ui-col-left {
+      background: var(--surface2);
+      border-right: 1px solid var(--border);
+      padding: 14px 10px;
+    }
+
+    .ui-col-right { padding: 14px; }
+
+    .ui-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .ui-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 7px;
+      border-radius: 5px;
+      color: var(--muted);
+      margin-bottom: 2px;
+      font-size: 0.8rem;
+    }
+    .ui-row.active { background: rgba(233,69,96,0.12); color: var(--accent); }
+    .ui-row.indent { padding-left: 20px; font-size: 0.78rem; }
+
+    .ui-track-row {
+      display: grid;
+      grid-template-columns: 22px 1fr 50px;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 4px;
+      border-bottom: 1px solid rgba(45,55,72,0.5);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .ui-track-name-col { overflow: hidden; }
+    .ui-track-title { color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ui-track-sub   { font-size: 0.72rem; }
+    .ui-track-dur   { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .drag-hint {
+      text-align: center;
+      padding: 16px;
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 12px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 16px 20px;
+    }
+
+    .meta-field label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .meta-field input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
+      font-size: 0.82rem;
+      padding: 6px 10px;
+      width: 100%;
+      outline: none;
+      pointer-events: none;
+    }
+
+    .dap-transfer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 28px 20px;
+    }
+
+    .dap-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .dap-box-icon { font-size: 2rem; margin-bottom: 8px; }
+    .dap-box-label { font-size: 0.82rem; color: var(--muted); }
+    .dap-box-sub   { font-size: 0.72rem; color: var(--muted); opacity: 0.7; margin-top: 4px; }
+
+    .dap-arrow { font-size: 1.4rem; color: var(--muted); }
+
+    .file-tree {
+      background: var(--surface2);
+      border-radius: 7px;
+      padding: 14px 16px;
+      font-family: 'Consolas', 'Menlo', monospace;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.9;
+      margin: 12px 0;
+    }
+
+    .file-tree .hl { color: var(--accent); font-weight: 600; }
+    .file-tree .dim { opacity: 0.5; }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 0.78rem;
+      font-family: 'Consolas', monospace;
+      color: var(--text);
+    }
+
+    /* ── Footer ── */
+    .guide-footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .guide-footer a { color: var(--accent); font-weight: 600; }
+    .guide-footer a:hover { color: var(--accent-h); }
+
+    @media (max-width: 600px) {
+      .ui-two-col { grid-template-columns: 1fr; }
+      .ui-col-left { display: none; }
+      .meta-grid { grid-template-columns: 1fr; }
+      .dap-transfer { flex-direction: column; }
+      .toc ol { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <a href="index.html" class="nav-brand">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="22" fill="url(#ng)"/>
+      <rect x="20" y="30" width="12" height="50" rx="4" fill="white"/>
+      <rect x="38" y="18" width="12" height="62" rx="4" fill="white" opacity=".9"/>
+      <rect x="56" y="40" width="12" height="42" rx="4" fill="white" opacity=".8"/>
+      <rect x="74" y="25" width="12" height="55" rx="4" fill="white" opacity=".7"/>
+      <defs>
+        <linearGradient id="ng" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#4F46E5"/>
+          <stop offset=".5" stop-color="#7C3AED"/>
+          <stop offset="1" stop-color="#EC4899"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    Lochord
+  </a>
+  <div class="nav-links">
+    <a href="index.html#features" data-i18n="nav.features">Features</a>
+    <a href="index.html#dap" data-i18n="nav.dap">For DAP</a>
+    <a href="index.html#download" data-i18n="nav.download">Download</a>
+    <a href="guide.html" class="active" data-i18n="nav.guide">Guide</a>
+    <a href="https://github.com/kakeru-ikeda/Lochord" target="_blank" rel="noopener">GitHub</a>
+
+    <div class="lang-switcher" id="langSwitcher">
+      <button class="lang-btn" id="langBtn" aria-label="Switch language">
+        <span id="currentLangLabel">EN</span>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 8L1 3h10L6 8z"/></svg>
+      </button>
+      <div class="lang-menu" id="langMenu">
+        <button data-lang="en" class="active">🇺🇸 English</button>
+        <button data-lang="ja">🇯🇵 日本語</button>
+        <button data-lang="ko">🇰🇷 한국어</button>
+        <button data-lang="zh">🇨🇳 中文</button>
+      </div>
+    </div>
+
+    <a href="index.html#download" class="btn-primary" data-i18n="nav.downloadBtn">↓ Download</a>
+  </div>
+</nav>
+
+<!-- ── Page content ── -->
+<div class="page-wrap">
+  <div class="page-header">
+    <h1><span class="gradient-text" data-i18n="guide.title">How to Use Lochord</span></h1>
+    <p data-i18n="guide.sub">From install to your first DAP-ready playlist in 5 minutes.</p>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title" data-i18n="guide.toc">Contents</div>
+    <ol>
+      <li><a href="#step1" data-i18n="s1.title">1. Install</a></li>
+      <li><a href="#step2" data-i18n="s2.title">2. Choose Music Folder</a></li>
+      <li><a href="#step3" data-i18n="s3.title">3. Browse Library</a></li>
+      <li><a href="#step4" data-i18n="s4.title">4. Create Playlist</a></li>
+      <li><a href="#step5" data-i18n="s5.title">5. Edit Metadata</a></li>
+      <li><a href="#step6" data-i18n="s6.title">6. Deploy to DAP</a></li>
+    </ol>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step" id="step1">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <h2 data-i18n="s1.title">Install</h2>
+    </div>
+    <p data-i18n="s1.p1">Download the installer for your OS from the <a href="index.html#download" style="color:var(--accent)">Download page</a> and run it.</p>
+    <ul>
+      <li data-i18n="s1.li1"><strong>Windows:</strong> Run <code>.exe</code> installer or <code>.msi</code> package. No admin rights needed for the NSIS installer.</li>
+      <li data-i18n="s1.li2"><strong>macOS:</strong> Open the <code>.dmg</code>, drag Lochord to Applications.</li>
+      <li data-i18n="s1.li3"><strong>Linux:</strong> Use <code>.AppImage</code> (no install needed), <code>.deb</code>, or <code>.rpm</code>.</li>
+    </ul>
+    <div class="step-tip">
+      <strong data-i18n="s1.tip.label">Windows note:</strong>
+      <span data-i18n="s1.tip.text"> SmartScreen may warn about an unsigned app. Click "More info → Run anyway" to proceed.</span>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step" id="step2">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <h2 data-i18n="s2.title">Choose Music Folder</h2>
+    </div>
+    <p data-i18n="s2.p1">On first launch, Lochord shows an onboarding screen asking you to select your music root folder.</p>
+    <div class="mockup">
+      <div class="mockup-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <div class="mockup-title">Lochord</div>
+      </div>
+      <div class="onboard-center">
+        <div class="onboard-icon">🎵</div>
+        <div class="onboard-title" data-i18n="s2.mock.title">Welcome to Lochord</div>
+        <div class="onboard-sub" data-i18n="s2.mock.sub">Select the root folder of your music library to get started.</div>
+        <div class="fake-btn">📂 <span data-i18n="s2.mock.btn">Choose Music Folder</span></div>
+      </div>
+    </div>
+    <p data-i18n="s2.p2">Select the top-level folder that contains all your music (e.g. <code>D:\Music</code> or <code>/Users/you/Music</code>). Lochord will create a <code>Playlists/</code> subfolder here automatically.</p>
+    <div class="step-tip">
+      <strong data-i18n="s2.tip.label">DAP tip:</strong>
+      <span data-i18n="s2.tip.text"> Use the same folder structure on your PC as on the DAP's SD card root. This keeps relative paths consistent.</span>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step" id="step3">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <h2 data-i18n="s3.title">Browse Your Library</h2>
+    </div>
+    <p data-i18n="s3.p1">After scanning, the left panel shows your playlists and the bottom panel shows your folder tree.</p>
+    <div class="mockup">
+      <div class="mockup-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <div class="mockup-title">Lochord</div>
+      </div>
+      <div class="ui-two-col">
+        <div class="ui-col-left">
+          <div class="ui-label" data-i18n="s3.mock.playlists">Playlists</div>
+          <div class="ui-row active">🎵 <span data-i18n="s3.mock.pl1">Favorites</span></div>
+          <div class="ui-row">🎵 <span data-i18n="s3.mock.pl2">Work BGM</span></div>
+        </div>
+        <div class="ui-col-right">
+          <div class="ui-label">📂 /Music</div>
+          <div class="ui-row">📁 Astell&amp;Kern Demo (2024) [FLAC 96kHz]</div>
+          <div class="ui-row indent">🎵 01. Opening.flac &nbsp; <span style="margin-left:auto">5:12</span></div>
+          <div class="ui-row indent">🎵 02. Journey.flac &nbsp; <span style="margin-left:auto">4:33</span></div>
+          <div class="ui-row">📁 <span data-i18n="s3.mock.folder2">Another Album (2023)</span></div>
+        </div>
+      </div>
+    </div>
+    <ul>
+      <li data-i18n="s3.li1">Click a folder to expand it and see tracks.</li>
+      <li data-i18n="s3.li2">Use the search bar to filter by filename or tag.</li>
+      <li data-i18n="s3.li3">Press <kbd class="kbd">F5</kbd> to rescan if you added new music.</li>
+    </ul>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step" id="step4">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <h2 data-i18n="s4.title">Create a Playlist</h2>
+    </div>
+    <p data-i18n="s4.p1">Click the <strong data-i18n="s4.newBtn">＋ New Playlist</strong> button in the left panel, then drag tracks from the library into the playlist.</p>
+    <div class="mockup">
+      <div class="mockup-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <div class="mockup-title">Lochord</div>
+      </div>
+      <div style="padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span style="font-weight:700;font-size:0.9rem" data-i18n="s4.mock.name">My Playlist</span>
+          <span style="background:var(--accent);color:#fff;font-size:0.7rem;padding:2px 10px;border-radius:4px" data-i18n="s4.mock.saved">Saved ✓</span>
+        </div>
+        <div class="ui-track-row">
+          <span style="color:var(--muted);font-size:0.75rem">1</span>
+          <div class="ui-track-name-col">
+            <div class="ui-track-title">Opening</div>
+            <div class="ui-track-sub">Astell&amp;Kern Demo</div>
+          </div>
+          <span class="ui-track-dur">5:12</span>
+        </div>
+        <div class="ui-track-row">
+          <span style="color:var(--muted);font-size:0.75rem">2</span>
+          <div class="ui-track-name-col">
+            <div class="ui-track-title">Journey</div>
+            <div class="ui-track-sub">Astell&amp;Kern Demo</div>
+          </div>
+          <span class="ui-track-dur">4:33</span>
+        </div>
+        <div class="drag-hint" data-i18n="s4.mock.hint">↓ Drag tracks here from library below</div>
+      </div>
+    </div>
+    <ul>
+      <li data-i18n="s4.li1">Drag a single track from the library onto the playlist panel.</li>
+      <li data-i18n="s4.li2">Select multiple tracks with <kbd class="kbd">Shift</kbd>+click or <kbd class="kbd">Ctrl</kbd>+click, then drag them all at once.</li>
+      <li data-i18n="s4.li3">Reorder tracks by dragging within the playlist.</li>
+      <li data-i18n="s4.li4">Press <kbd class="kbd">Ctrl</kbd>+<kbd class="kbd">S</kbd> to save, or enable auto-save in Settings.</li>
+    </ul>
+    <div class="step-tip">
+      <strong data-i18n="s4.tip.label">Output format:</strong>
+      <span data-i18n="s4.tip.text"> Playlists are saved as UTF-8 M3U8 files in <code>Music/Playlists/</code>. Paths inside the file are relative (e.g. <code>../Artist/01.flac</code>), so they resolve correctly on any device.</span>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step" id="step5">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <h2 data-i18n="s5.title">Edit Metadata (Optional)</h2>
+    </div>
+    <p data-i18n="s5.p1">Right-click any track (or select multiple and right-click) to open the metadata editor. Edit ID3 tags directly without a separate app.</p>
+    <div class="mockup">
+      <div class="mockup-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <div class="mockup-title" data-i18n="s5.mock.title">Metadata Editor — Opening.flac</div>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-field"><label data-i18n="s5.field.title">Title</label><input readonly value="Opening" /></div>
+        <div class="meta-field"><label data-i18n="s5.field.artist">Artist</label><input readonly value="Astell&Kern Demo" /></div>
+        <div class="meta-field"><label data-i18n="s5.field.album">Album</label><input readonly value="Astell&Kern Demo (2024)" /></div>
+        <div class="meta-field"><label data-i18n="s5.field.genre">Genre</label><input readonly value="Electronic" /></div>
+        <div class="meta-field"><label data-i18n="s5.field.year">Year</label><input readonly value="2024" /></div>
+        <div class="meta-field"><label data-i18n="s5.field.bpm">BPM</label><input readonly value="120" /></div>
+      </div>
+    </div>
+    <ul>
+      <li data-i18n="s5.li1">Tags are written directly to the audio file (FLAC VORBIS_COMMENT or MP3 ID3v2).</li>
+      <li data-i18n="s5.li2">Cover art can be previewed and replaced from the editor.</li>
+      <li data-i18n="s5.li3">Select multiple tracks to batch-edit shared fields.</li>
+    </ul>
+  </div>
+
+  <!-- Step 6 -->
+  <div class="step" id="step6">
+    <div class="step-header">
+      <div class="step-num">6</div>
+      <h2 data-i18n="s6.title">Deploy to Your DAP</h2>
+    </div>
+    <p data-i18n="s6.p1">Once your playlists are saved, transfer your music to the DAP's SD card, preserving the folder structure.</p>
+
+    <div class="mockup">
+      <div class="mockup-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <div class="mockup-title" data-i18n="s6.mock.title">Copy to SD Card</div>
+      </div>
+      <div class="dap-transfer">
+        <div class="dap-box">
+          <div class="dap-box-icon">🖥️</div>
+          <div class="dap-box-label" data-i18n="s6.mock.pc">PC</div>
+          <div class="dap-box-sub">D:\Music\</div>
+        </div>
+        <div class="dap-arrow">→</div>
+        <div class="dap-box">
+          <div class="dap-box-icon">💾</div>
+          <div class="dap-box-label" data-i18n="s6.mock.sd">SD Card</div>
+          <div class="dap-box-sub">E:\Music\</div>
+        </div>
+        <div class="dap-arrow">→</div>
+        <div class="dap-box">
+          <div class="dap-box-icon">🎧</div>
+          <div class="dap-box-label" data-i18n="s6.mock.dap">DAP</div>
+          <div class="dap-box-sub">Astell&amp;Kern · Shanling · HiBy…</div>
+        </div>
+      </div>
+    </div>
+
+    <p data-i18n="s6.p2">The folder structure on your SD card should mirror your PC:</p>
+    <div class="file-tree">
+Music/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="dim" data-i18n="s6.tree.root">← SD card root</span><br>
+├── <span class="hl">Playlists/</span><br>
+│ &nbsp; ├── <span class="hl">Favorites.m3u8</span> &nbsp;<span class="dim" data-i18n="s6.tree.m3u">← relative paths inside</span><br>
+│ &nbsp; └── Work BGM.m3u8<br>
+├── Artist A - Album (2024) [FLAC]/<br>
+│ &nbsp; └── 01. Track.flac<br>
+└── Artist B - Album (2023) [MP3]/</div>
+
+    <ul>
+      <li data-i18n="s6.li1">On the DAP, go to <strong>Playlist</strong> or <strong>File Browser</strong> and open any <code>.m3u8</code> file.</li>
+      <li data-i18n="s6.li2">Relative paths like <code>../Artist/01.flac</code> resolve automatically from the <code>Playlists/</code> folder.</li>
+      <li data-i18n="s6.li3">Works with Astell&amp;Kern, Activo, Shanling, HiBy, FiiO, Sony Walkman, Cayin, iBasso and any other M3U8-capable DAP.</li>
+    </ul>
+    <div class="step-tip">
+      <strong data-i18n="s6.tip.label">Pro tip:</strong>
+      <span data-i18n="s6.tip.text"> If you only update playlists (not music files), you only need to copy the <code>Playlists/</code> folder to the SD card — much faster.</span>
+    </div>
+  </div>
+
+  <!-- Done banner -->
+  <div style="text-align:center;padding:48px 0 16px">
+    <div style="font-size:2rem;margin-bottom:12px">🎉</div>
+    <h2 style="font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px" data-i18n="guide.done.title">You're all set!</h2>
+    <p style="color:var(--muted);font-size:0.95rem;max-width:420px;margin:0 auto 24px" data-i18n="guide.done.sub">Your playlists are ready to load on your DAP. Enjoy your music.</p>
+    <a href="index.html#download" style="display:inline-flex;align-items:center;gap:8px;background:var(--grad);color:#fff;padding:12px 28px;border-radius:8px;font-weight:700;font-size:0.95rem;" data-i18n="guide.done.btn">↓ Download Lochord</a>
+  </div>
+</div>
+
+<!-- ── Footer ── -->
+<div class="guide-footer">
+  <p>
+    <a href="index.html">Lochord</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/kakeru-ikeda/Lochord" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/kakeru-ikeda/Lochord/releases" target="_blank" rel="noopener" data-i18n="footer.releases">Releases</a>
+    &nbsp;·&nbsp; MIT License
+  </p>
+</div>
+
+<script>
+const T = {
+  en: {
+    "nav.features": "Features", "nav.dap": "For DAP", "nav.guide": "Guide",
+    "nav.download": "Download", "nav.downloadBtn": "↓ Download",
+    "meta.title":   "Lochord — How to Use",
+    "guide.title":  "How to Use Lochord",
+    "guide.sub":    "From install to your first DAP-ready playlist in 5 minutes.",
+    "guide.toc":    "Contents",
+    "s1.title": "Install",
+    "s1.p1": "Download the installer for your OS from the Download page and run it.",
+    "s1.li1": "Windows: Run .exe installer or .msi package. No admin rights needed for the NSIS installer.",
+    "s1.li2": "macOS: Open the .dmg, drag Lochord to Applications.",
+    "s1.li3": "Linux: Use .AppImage (no install needed), .deb, or .rpm.",
+    "s1.tip.label": "Windows note:", "s1.tip.text": " SmartScreen may warn about an unsigned app. Click "More info → Run anyway" to proceed.",
+    "s2.title": "Choose Music Folder",
+    "s2.p1": "On first launch, Lochord shows an onboarding screen asking you to select your music root folder.",
+    "s2.mock.title": "Welcome to Lochord",
+    "s2.mock.sub": "Select the root folder of your music library to get started.",
+    "s2.mock.btn": "Choose Music Folder",
+    "s2.p2": "Select the top-level folder that contains all your music. Lochord will create a Playlists/ subfolder here automatically.",
+    "s2.tip.label": "DAP tip:", "s2.tip.text": " Use the same folder structure on your PC as on the DAP's SD card root. This keeps relative paths consistent.",
+    "s3.title": "Browse Your Library",
+    "s3.p1": "After scanning, the left panel shows your playlists and the right panel shows your folder tree.",
+    "s3.mock.playlists": "Playlists", "s3.mock.pl1": "Favorites", "s3.mock.pl2": "Work BGM",
+    "s3.mock.folder2": "Another Album (2023)",
+    "s3.li1": "Click a folder to expand it and see tracks.",
+    "s3.li2": "Use the search bar to filter by filename or tag.",
+    "s3.li3": "Press F5 to rescan if you added new music.",
+    "s4.title": "Create a Playlist",
+    "s4.p1": "Click the ＋ New Playlist button in the left panel, then drag tracks from the library into the playlist.",
+    "s4.newBtn": "＋ New Playlist",
+    "s4.mock.name": "My Playlist", "s4.mock.saved": "Saved ✓",
+    "s4.mock.hint": "↓ Drag tracks here from library below",
+    "s4.li1": "Drag a single track from the library onto the playlist panel.",
+    "s4.li2": "Select multiple tracks with Shift+click or Ctrl+click, then drag them all at once.",
+    "s4.li3": "Reorder tracks by dragging within the playlist.",
+    "s4.li4": "Press Ctrl+S to save, or enable auto-save in Settings.",
+    "s4.tip.label": "Output format:", "s4.tip.text": " Playlists are saved as UTF-8 M3U8 files in Music/Playlists/. Paths inside the file are relative, so they resolve correctly on any device.",
+    "s5.title": "Edit Metadata (Optional)",
+    "s5.p1": "Right-click any track to open the metadata editor. Edit ID3 tags directly without a separate app.",
+    "s5.mock.title": "Metadata Editor — Opening.flac",
+    "s5.field.title": "Title", "s5.field.artist": "Artist", "s5.field.album": "Album",
+    "s5.field.genre": "Genre", "s5.field.year": "Year", "s5.field.bpm": "BPM",
+    "s5.li1": "Tags are written directly to the audio file (FLAC VORBIS_COMMENT or MP3 ID3v2).",
+    "s5.li2": "Cover art can be previewed and replaced from the editor.",
+    "s5.li3": "Select multiple tracks to batch-edit shared fields.",
+    "s6.title": "Deploy to Your DAP",
+    "s6.p1": "Once your playlists are saved, transfer your music to the DAP's SD card, preserving the folder structure.",
+    "s6.mock.title": "Copy to SD Card",
+    "s6.mock.pc": "PC", "s6.mock.sd": "SD Card", "s6.mock.dap": "DAP",
+    "s6.p2": "The folder structure on your SD card should mirror your PC:",
+    "s6.tree.root": "← SD card root", "s6.tree.m3u": "← relative paths inside",
+    "s6.li1": "On the DAP, go to Playlist or File Browser and open any .m3u8 file.",
+    "s6.li2": "Relative paths like ../Artist/01.flac resolve automatically from the Playlists/ folder.",
+    "s6.li3": "Works with Astell&Kern, Activo, Shanling, HiBy, FiiO, Sony Walkman, Cayin, iBasso and any other M3U8-capable DAP.",
+    "s6.tip.label": "Pro tip:", "s6.tip.text": " If you only update playlists, you only need to copy the Playlists/ folder to the SD card — much faster.",
+    "guide.done.title": "You're all set!",
+    "guide.done.sub": "Your playlists are ready to load on your DAP. Enjoy your music.",
+    "guide.done.btn": "↓ Download Lochord",
+    "footer.releases": "Releases",
+  },
+
+  ja: {
+    "nav.features": "機能", "nav.dap": "DAP 向け", "nav.guide": "使い方",
+    "nav.download": "ダウンロード", "nav.downloadBtn": "↓ ダウンロード",
+    "meta.title":   "Lochord — 使い方ガイド",
+    "guide.title":  "Lochord の使い方",
+    "guide.sub":    "インストールから最初の DAP 用プレイリスト作成まで、5 分で完了。",
+    "guide.toc":    "目次",
+    "s1.title": "インストール",
+    "s1.p1": "ダウンロードページからお使いの OS 用インストーラーをダウンロードして実行してください。",
+    "s1.li1": "Windows: .exe インストーラーまたは .msi パッケージを実行。NSIS インストーラーは管理者権限不要。",
+    "s1.li2": "macOS: .dmg を開き、Lochord をアプリケーションフォルダにドラッグ。",
+    "s1.li3": "Linux: .AppImage（インストール不要）、.deb、または .rpm を使用。",
+    "s1.tip.label": "Windows の注意点:", "s1.tip.text": " SmartScreen が署名のないアプリとして警告する場合があります。「詳細情報 → 実行」をクリックして続行してください。",
+    "s2.title": "音楽フォルダの選択",
+    "s2.p1": "初回起動時にオンボーディング画面が表示されるので、音楽ライブラリのルートフォルダを選択してください。",
+    "s2.mock.title": "Lochord へようこそ",
+    "s2.mock.sub": "音楽ライブラリのルートフォルダを選択して始めましょう。",
+    "s2.mock.btn": "音楽フォルダを選択",
+    "s2.p2": "すべての音楽が入ったトップレベルのフォルダを選択してください。Lochord は自動的に Playlists/ サブフォルダを作成します。",
+    "s2.tip.label": "DAP のヒント:", "s2.tip.text": " PC と DAP の SD カード上のフォルダ構造を同じにしておくと、相対パスが一致して便利です。",
+    "s3.title": "ライブラリの閲覧",
+    "s3.p1": "スキャン後、左パネルにプレイリスト、右パネルにフォルダツリーが表示されます。",
+    "s3.mock.playlists": "プレイリスト", "s3.mock.pl1": "お気に入り", "s3.mock.pl2": "作業用 BGM",
+    "s3.mock.folder2": "別のアルバム (2023)",
+    "s3.li1": "フォルダをクリックして展開し、トラックを表示します。",
+    "s3.li2": "検索バーでファイル名やタグを絞り込めます。",
+    "s3.li3": "新しい音楽を追加した場合は F5 キーで再スキャンできます。",
+    "s4.title": "プレイリストの作成",
+    "s4.p1": "左パネルの「＋ 新規プレイリスト」ボタンをクリックし、ライブラリからトラックをドラッグ＆ドロップで追加します。",
+    "s4.newBtn": "＋ 新規プレイリスト",
+    "s4.mock.name": "マイプレイリスト", "s4.mock.saved": "保存済み ✓",
+    "s4.mock.hint": "↓ 下のライブラリからトラックをここにドラッグ",
+    "s4.li1": "ライブラリから単曲をプレイリストパネルにドラッグします。",
+    "s4.li2": "Shift クリックや Ctrl クリックで複数選択してまとめてドラッグできます。",
+    "s4.li3": "プレイリスト内でドラッグして曲順を並び替えられます。",
+    "s4.li4": "Ctrl+S で保存、または設定から自動保存を有効にできます。",
+    "s4.tip.label": "出力形式:", "s4.tip.text": " プレイリストは Music/Playlists/ 配下に UTF-8 の M3U8 ファイルとして保存されます。パスは相対パスで記録されるため、どのデバイスでも正しく解決されます。",
+    "s5.title": "メタデータの編集（任意）",
+    "s5.p1": "トラックを右クリックするとメタデータエディターが開きます。別アプリ不要で ID3 タグを直接編集できます。",
+    "s5.mock.title": "メタデータエディター — Opening.flac",
+    "s5.field.title": "タイトル", "s5.field.artist": "アーティスト", "s5.field.album": "アルバム",
+    "s5.field.genre": "ジャンル", "s5.field.year": "年", "s5.field.bpm": "BPM",
+    "s5.li1": "タグはオーディオファイル（FLAC の VORBIS_COMMENT や MP3 の ID3v2）に直接書き込まれます。",
+    "s5.li2": "カバーアートのプレビューと差し替えもエディターから行えます。",
+    "s5.li3": "複数のトラックを選択すると共通フィールドをまとめて編集できます。",
+    "s6.title": "DAP への転送",
+    "s6.p1": "プレイリストを保存したら、フォルダ構造を保ったまま音楽を DAP の SD カードへ転送します。",
+    "s6.mock.title": "SD カードへコピー",
+    "s6.mock.pc": "PC", "s6.mock.sd": "SD カード", "s6.mock.dap": "DAP",
+    "s6.p2": "SD カード上のフォルダ構造は PC と一致させてください：",
+    "s6.tree.root": "← SD カードのルート", "s6.tree.m3u": "← 相対パスで記録",
+    "s6.li1": "DAP のプレイリストまたはファイルブラウザから .m3u8 ファイルを開きます。",
+    "s6.li2": "../Artist/01.flac のような相対パスは Playlists/ フォルダから自動的に解決されます。",
+    "s6.li3": "Astell&Kern, Activo, Shanling, HiBy, FiiO, Sony Walkman, Cayin, iBasso など M3U8 対応の DAP であれば動作します。",
+    "s6.tip.label": "Pro ヒント:", "s6.tip.text": " 音楽ファイルは変えずにプレイリストだけ更新する場合は、Playlists/ フォルダだけ SD カードにコピーすれば OK。転送が格段に速くなります。",
+    "guide.done.title": "準備完了！",
+    "guide.done.sub": "プレイリストが DAP でいつでも再生できる状態になりました。音楽を楽しんでください。",
+    "guide.done.btn": "↓ Lochord をダウンロード",
+    "footer.releases": "リリース",
+  },
+
+  ko: {
+    "nav.features": "기능", "nav.dap": "DAP용", "nav.guide": "사용 방법",
+    "nav.download": "다운로드", "nav.downloadBtn": "↓ 다운로드",
+    "meta.title":   "Lochord — 사용 방법",
+    "guide.title":  "Lochord 사용 방법",
+    "guide.sub":    "설치부터 첫 DAP 플레이리스트 완성까지 5분이면 충분합니다.",
+    "guide.toc":    "목차",
+    "s1.title": "설치",
+    "s1.p1": "다운로드 페이지에서 운영체제에 맞는 설치 프로그램을 내려받아 실행하세요.",
+    "s1.li1": "Windows: .exe 설치 프로그램 또는 .msi 패키지 실행. NSIS 설치 프로그램은 관리자 권한 불필요.",
+    "s1.li2": "macOS: .dmg 열고 Lochord를 응용 프로그램 폴더로 드래그.",
+    "s1.li3": "Linux: .AppImage(설치 불필요), .deb, .rpm 중 선택.",
+    "s1.tip.label": "Windows 참고:", "s1.tip.text": " SmartScreen에서 서명되지 않은 앱 경고가 뜰 수 있습니다. '추가 정보 → 실행'을 클릭하세요.",
+    "s2.title": "음악 폴더 선택",
+    "s2.p1": "첫 실행 시 온보딩 화면에서 음악 라이브러리의 루트 폴더를 선택합니다.",
+    "s2.mock.title": "Lochord에 오신 것을 환영합니다",
+    "s2.mock.sub": "음악 라이브러리의 루트 폴더를 선택해 시작하세요.",
+    "s2.mock.btn": "음악 폴더 선택",
+    "s2.p2": "모든 음악이 들어있는 최상위 폴더를 선택하세요. Playlists/ 하위 폴더가 자동으로 생성됩니다.",
+    "s2.tip.label": "DAP 팁:", "s2.tip.text": " PC와 DAP SD 카드의 폴더 구조를 동일하게 유지하면 상대 경로가 일치합니다.",
+    "s3.title": "라이브러리 탐색",
+    "s3.p1": "스캔 후 왼쪽 패널에는 플레이리스트, 오른쪽 패널에는 폴더 트리가 표시됩니다.",
+    "s3.mock.playlists": "플레이리스트", "s3.mock.pl1": "즐겨찾기", "s3.mock.pl2": "작업 BGM",
+    "s3.mock.folder2": "다른 앨범 (2023)",
+    "s3.li1": "폴더를 클릭해 확장하면 트랙을 볼 수 있습니다.",
+    "s3.li2": "검색창으로 파일명이나 태그를 필터링하세요.",
+    "s3.li3": "음악을 추가한 경우 F5 키로 재스캔하세요.",
+    "s4.title": "플레이리스트 만들기",
+    "s4.p1": "왼쪽 패널의 '＋ 새 플레이리스트' 버튼을 클릭한 후, 라이브러리에서 트랙을 드래그해 추가합니다.",
+    "s4.newBtn": "＋ 새 플레이리스트",
+    "s4.mock.name": "내 플레이리스트", "s4.mock.saved": "저장됨 ✓",
+    "s4.mock.hint": "↓ 아래 라이브러리에서 트랙을 여기에 드래그",
+    "s4.li1": "라이브러리에서 단일 트랙을 플레이리스트 패널로 드래그합니다.",
+    "s4.li2": "Shift 클릭 또는 Ctrl 클릭으로 여러 트랙을 선택해 한 번에 드래그할 수 있습니다.",
+    "s4.li3": "플레이리스트 내에서 드래그하여 순서를 변경하세요.",
+    "s4.li4": "Ctrl+S로 저장하거나 설정에서 자동 저장을 활성화하세요.",
+    "s4.tip.label": "출력 형식:", "s4.tip.text": " 플레이리스트는 Music/Playlists/ 폴더에 UTF-8 M3U8 파일로 저장됩니다. 상대 경로로 기록되므로 어떤 기기에서도 올바르게 해석됩니다.",
+    "s5.title": "메타데이터 편집 (선택)",
+    "s5.p1": "트랙을 우클릭하면 메타데이터 편집기가 열립니다. 별도 앱 없이 ID3 태그를 직접 편집할 수 있습니다.",
+    "s5.mock.title": "메타데이터 편집기 — Opening.flac",
+    "s5.field.title": "제목", "s5.field.artist": "아티스트", "s5.field.album": "앨범",
+    "s5.field.genre": "장르", "s5.field.year": "연도", "s5.field.bpm": "BPM",
+    "s5.li1": "태그는 오디오 파일(FLAC VORBIS_COMMENT 또는 MP3 ID3v2)에 직접 기록됩니다.",
+    "s5.li2": "커버 아트를 미리보고 교체할 수 있습니다.",
+    "s5.li3": "여러 트랙을 선택하면 공통 필드를 일괄 편집할 수 있습니다.",
+    "s6.title": "DAP에 전송",
+    "s6.p1": "플레이리스트를 저장한 후 폴더 구조를 유지하면서 음악을 DAP SD 카드로 복사합니다.",
+    "s6.mock.title": "SD 카드에 복사",
+    "s6.mock.pc": "PC", "s6.mock.sd": "SD 카드", "s6.mock.dap": "DAP",
+    "s6.p2": "SD 카드의 폴더 구조는 PC와 동일해야 합니다:",
+    "s6.tree.root": "← SD 카드 루트", "s6.tree.m3u": "← 상대 경로로 기록",
+    "s6.li1": "DAP의 플레이리스트 또는 파일 브라우저에서 .m3u8 파일을 열면 됩니다.",
+    "s6.li2": "../Artist/01.flac 형태의 상대 경로는 Playlists/ 폴더 기준으로 자동 해석됩니다.",
+    "s6.li3": "Astell&Kern, Activo, Shanling, HiBy, FiiO, Sony Walkman, Cayin, iBasso 등 M3U8 지원 DAP에서 모두 작동합니다.",
+    "s6.tip.label": "프로 팁:", "s6.tip.text": " 음악 파일은 그대로이고 플레이리스트만 업데이트할 경우, Playlists/ 폴더만 SD 카드에 복사하면 됩니다. 훨씬 빠릅니다.",
+    "guide.done.title": "준비 완료!",
+    "guide.done.sub": "플레이리스트가 DAP에서 바로 재생할 수 있는 상태입니다. 음악을 즐기세요.",
+    "guide.done.btn": "↓ Lochord 다운로드",
+    "footer.releases": "릴리스",
+  },
+
+  zh: {
+    "nav.features": "功能", "nav.dap": "DAP 专区", "nav.guide": "使用指南",
+    "nav.download": "下载", "nav.downloadBtn": "↓ 下载",
+    "meta.title":   "Lochord — 使用指南",
+    "guide.title":  "Lochord 使用指南",
+    "guide.sub":    "从安装到生成第一个 DAP 可用的播放列表，5 分钟搞定。",
+    "guide.toc":    "目录",
+    "s1.title": "安装",
+    "s1.p1": "从下载页面下载适合您操作系统的安装包并运行。",
+    "s1.li1": "Windows：运行 .exe 安装程序或 .msi 安装包，NSIS 安装程序无需管理员权限。",
+    "s1.li2": "macOS：打开 .dmg，将 Lochord 拖入应用程序文件夹。",
+    "s1.li3": "Linux：使用 .AppImage（无需安装）、.deb 或 .rpm。",
+    "s1.tip.label": "Windows 提示：", "s1.tip.text": " SmartScreen 可能会对未签名应用发出警告，点击"更多信息 → 仍要运行"即可继续。",
+    "s2.title": "选择音乐文件夹",
+    "s2.p1": "首次启动时，Lochord 会显示引导页面，要求您选择音乐库的根目录。",
+    "s2.mock.title": "欢迎使用 Lochord",
+    "s2.mock.sub": "请选择音乐库的根目录以开始使用。",
+    "s2.mock.btn": "选择音乐文件夹",
+    "s2.p2": "选择包含所有音乐的顶层文件夹，Lochord 将自动创建 Playlists/ 子文件夹。",
+    "s2.tip.label": "DAP 提示：", "s2.tip.text": " 建议 PC 与 DAP SD 卡的文件夹结构保持一致，以确保相对路径正确解析。",
+    "s3.title": "浏览音乐库",
+    "s3.p1": "扫描完成后，左侧面板显示播放列表，右侧面板显示文件夹树。",
+    "s3.mock.playlists": "播放列表", "s3.mock.pl1": "我的最爱", "s3.mock.pl2": "工作背景音乐",
+    "s3.mock.folder2": "另一张专辑 (2023)",
+    "s3.li1": "点击文件夹展开并查看曲目。",
+    "s3.li2": "使用搜索栏按文件名或标签筛选。",
+    "s3.li3": "添加新音乐后按 F5 重新扫描。",
+    "s4.title": "创建播放列表",
+    "s4.p1": "点击左侧面板的"＋ 新建播放列表"按钮，然后从音乐库拖拽曲目添加。",
+    "s4.newBtn": "＋ 新建播放列表",
+    "s4.mock.name": "我的播放列表", "s4.mock.saved": "已保存 ✓",
+    "s4.mock.hint": "↓ 从下方音乐库拖拽曲目到此处",
+    "s4.li1": "从音乐库将单首曲目拖到播放列表面板。",
+    "s4.li2": "用 Shift 点击或 Ctrl 点击选择多首曲目后一起拖动。",
+    "s4.li3": "在播放列表内拖动以调整曲目顺序。",
+    "s4.li4": "按 Ctrl+S 保存，或在设置中开启自动保存。",
+    "s4.tip.label": "输出格式：", "s4.tip.text": " 播放列表以 UTF-8 M3U8 格式保存在 Music/Playlists/ 中，文件内使用相对路径，可在任何设备上正确解析。",
+    "s5.title": "编辑元数据（可选）",
+    "s5.p1": "右键点击任意曲目打开元数据编辑器，无需额外软件即可直接编辑 ID3 标签。",
+    "s5.mock.title": "元数据编辑器 — Opening.flac",
+    "s5.field.title": "标题", "s5.field.artist": "艺术家", "s5.field.album": "专辑",
+    "s5.field.genre": "流派", "s5.field.year": "年份", "s5.field.bpm": "BPM",
+    "s5.li1": "标签直接写入音频文件（FLAC 的 VORBIS_COMMENT 或 MP3 的 ID3v2）。",
+    "s5.li2": "可在编辑器中预览和替换封面图。",
+    "s5.li3": "选择多首曲目可批量编辑公共字段。",
+    "s6.title": "部署到 DAP",
+    "s6.p1": "保存播放列表后，保持文件夹结构将音乐复制到 DAP 的 SD 卡。",
+    "s6.mock.title": "复制到 SD 卡",
+    "s6.mock.pc": "电脑", "s6.mock.sd": "SD 卡", "s6.mock.dap": "DAP",
+    "s6.p2": "SD 卡上的文件夹结构应与 PC 保持一致：",
+    "s6.tree.root": "← SD 卡根目录", "s6.tree.m3u": "← 相对路径",
+    "s6.li1": "在 DAP 的播放列表或文件浏览器中打开 .m3u8 文件即可。",
+    "s6.li2": "../Artist/01.flac 形式的相对路径会从 Playlists/ 文件夹自动解析。",
+    "s6.li3": "兼容 Astell&Kern、Activo、Shanling、HiBy、FiiO、Sony Walkman、Cayin、iBasso 等支持 M3U8 的 DAP。",
+    "s6.tip.label": "进阶提示：", "s6.tip.text": " 如果只更新播放列表而不更改音乐文件，只需将 Playlists/ 文件夹复制到 SD 卡即可，速度更快。",
+    "guide.done.title": "大功告成！",
+    "guide.done.sub": "播放列表已准备好，可在 DAP 上加载播放。尽情享受音乐吧。",
+    "guide.done.btn": "↓ 下载 Lochord",
+    "footer.releases": "版本发布",
+  },
+};
+
+const LANG_LABELS = { en: "EN", ja: "JA", ko: "KO", zh: "ZH" };
+const HTML_LANGS  = { en: "en", ja: "ja", ko: "ko", zh: "zh" };
+
+function applyLang(lang) {
+  const dict = T[lang] || T.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.textContent = dict[key];
+  });
+  document.documentElement.lang = HTML_LANGS[lang] || 'en';
+  document.getElementById('currentLangLabel').textContent = LANG_LABELS[lang] || 'EN';
+  document.querySelectorAll('#langMenu button').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  localStorage.setItem('lochord-lang', lang);
+}
+
+const switcher = document.getElementById('langSwitcher');
+document.getElementById('langBtn').addEventListener('click', e => { e.stopPropagation(); switcher.classList.toggle('open'); });
+document.addEventListener('click', () => switcher.classList.remove('open'));
+document.querySelectorAll('#langMenu button').forEach(btn => {
+  btn.addEventListener('click', e => { e.stopPropagation(); applyLang(btn.dataset.lang); switcher.classList.remove('open'); });
+});
+
+(function() {
+  const saved   = localStorage.getItem('lochord-lang');
+  const browser = (navigator.language || '').toLowerCase().slice(0,2);
+  applyLang(saved || (['ja','ko','zh'].includes(browser) ? browser : 'en'));
+})();
+</script>
+
+</body>
+</html>
