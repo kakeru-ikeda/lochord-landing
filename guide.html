@@ -1039,9 +1039,22 @@ function applyLang(lang) {
   document.getElementById('currentLangLabel').textContent = LANG_LABELS[lang] || 'EN';
   document.querySelectorAll('#langMenu button').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   localStorage.setItem('lochord-lang', lang);
+  const url = new URL(location.href);
+  url.searchParams.set('lang', lang);
+  history.replaceState(null, '', url);
+  // propagate lang param to cross-page links
+  document.querySelectorAll('a[href]').forEach(a => {
+    try {
+      const u = new URL(a.href, location.href);
+      if (u.origin === location.origin) {
+        u.searchParams.set('lang', lang);
+        a.href = u.pathname + u.search + u.hash;
+      }
+    } catch {}
+  });
 }
 
-const switcher = document.getElementById('langSwitcher');
+const switcher= document.getElementById('langSwitcher');
 document.getElementById('langBtn').addEventListener('click', e => { e.stopPropagation(); switcher.classList.toggle('open'); });
 document.addEventListener('click', () => switcher.classList.remove('open'));
 document.querySelectorAll('#langMenu button').forEach(btn => {
@@ -1049,9 +1062,13 @@ document.querySelectorAll('#langMenu button').forEach(btn => {
 });
 
 (function() {
+  const param   = new URLSearchParams(location.search).get('lang');
   const saved   = localStorage.getItem('lochord-lang');
   const browser = (navigator.language || '').toLowerCase().slice(0,2);
-  applyLang(saved || (['ja','ko','zh'].includes(browser) ? browser : 'en'));
+  const detected = (param && T[param]) ? param
+                 : (saved && T[saved])  ? saved
+                 : (['ja','ko','zh'].includes(browser) ? browser : 'en');
+  applyLang(detected);
 })();
 </script>
 
