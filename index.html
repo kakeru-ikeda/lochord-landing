@@ -21,172 +21,9 @@
   <link rel="alternate" hreflang="x-default" href="https://kakeru-ikeda.github.io/lochord-landing/" />
   <title id="page-title">Lochord — M3U8 Playlist Manager for DAP</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSJ1cmwoI2cpIi8+PHJlY3QgeD0iMjAiIHk9IjMwIiB3aWR0aD0iMTIiIGhlaWdodD0iNTAiIHJ4PSI0IiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjM4IiB5PSIxOCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjYyIiByeD0iNCIgZmlsbD0id2hpdGUiIG9wYWNpdHk9Ii45Ii8+PHJlY3QgeD0iNTYiIHk9IjQwIiB3aWR0aD0iMTIiIGhlaWdodD0iNDIiIHJ4PSI0IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iLjgiLz48cmVjdCB4PSI3NCIgeT0iMjUiIHdpZHRoPSIxMiIgaGVpZ2h0PSI1NSIgcng9IjQiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIuNyIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMTAwIiB5Mj0iMTAwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzRGNDZFNSIvPjxzdG9wIG9mZnNldD0iLjUiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNFQzQ4OTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4=">
+  <link rel="stylesheet" href="assets/style.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:        #1a1a2e;
-      --surface:   #16213e;
-      --surface2:  #0f1729;
-      --accent:    #e94560;
-      --accent-h:  #ff5577;
-      --text:      #e0e0e0;
-      --muted:     #8892a4;
-      --border:    #2d3748;
-      --grad:      linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
-      --radius:    10px;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    a { color: inherit; text-decoration: none; }
-
-    /* ── Nav ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: rgba(26, 26, 46, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 24px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .nav-brand svg { width: 32px; height: 32px; flex-shrink: 0; }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      font-size: 0.9rem;
-      padding: 6px 12px;
-      border-radius: 6px;
-      transition: color 0.2s, background 0.2s;
-    }
-    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
-    /* Override: btn-primary inside nav must stay white */
-    .nav-links .btn-primary,
-    .nav-links .btn-primary:hover { color: #fff; }
-
-    /* Language switcher */
-    .lang-switcher {
-      position: relative;
-      margin-left: 4px;
-    }
-
-    .lang-btn {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      color: var(--text);
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 5px 10px;
-      cursor: pointer;
-      transition: background 0.2s, border-color 0.2s;
-      white-space: nowrap;
-    }
-    .lang-btn:hover { background: rgba(255,255,255,0.10); border-color: var(--muted); }
-    .lang-btn svg { opacity: 0.6; transition: transform 0.2s; }
-    .lang-switcher.open .lang-btn svg { transform: rotate(180deg); }
-
-    .lang-menu {
-      display: none;
-      position: absolute;
-      right: 0;
-      top: calc(100% + 6px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-      min-width: 130px;
-      z-index: 200;
-    }
-    .lang-switcher.open .lang-menu { display: block; }
-
-    .lang-menu button {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-      padding: 9px 14px;
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      text-align: left;
-    }
-    .lang-menu button:hover { background: rgba(255,255,255,0.06); color: var(--text); }
-    .lang-menu button.active { color: var(--accent); background: rgba(233,69,96,0.08); }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 20px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: none;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-    }
-    .btn-primary:hover { background: var(--accent-h); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(233,69,96,0.4); }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .btn-outline:hover { border-color: var(--muted); background: rgba(255,255,255,0.04); }
-
-    .btn-grad {
-      background: var(--grad);
-      color: #fff;
-      font-size: 1rem;
-      padding: 14px 32px;
-    }
-    .btn-grad:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 6px 28px rgba(124,58,237,0.45); }
-
-    /* ── Hero ── */
+    /* ── Hero ──────────────────────────────────────────────────────────── */
     .hero {
       padding: 140px 24px 100px;
       max-width: 900px;
@@ -216,13 +53,6 @@
       letter-spacing: -0.03em;
       line-height: 1.15;
       margin-bottom: 24px;
-    }
-
-    .gradient-text {
-      background: var(--grad);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
     .hero p {
@@ -550,32 +380,8 @@
       font-weight: 500;
     }
 
-    /* ── Footer ── */
-    footer {
-      background: var(--surface2);
-      border-top: 1px solid var(--border);
-      padding: 40px 24px;
-      text-align: center;
-    }
-
-    .footer-brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-    .footer-brand svg { width: 28px; height: 28px; }
-
-    footer p { font-size: 0.84rem; color: var(--muted); margin-bottom: 8px; }
-    footer a { color: var(--accent); font-weight: 600; transition: color 0.2s; }
-    footer a:hover { color: var(--accent-h); }
-
     /* ── Responsive ── */
     @media (max-width: 640px) {
-      nav { padding: 0 12px; }
-      .nav-links a:not(.nav-dl-btn) { display: none; }
       .app-ui { grid-template-columns: 1fr; }
       .ui-sidebar { display: none; }
       .hero { padding: 110px 16px 80px; }
@@ -870,7 +676,7 @@
 </section>
 
 <!-- ── Footer ── -->
-<footer>
+<footer class="site-footer" style="background:var(--surface2)">
   <div class="footer-brand">
     <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="100" height="100" rx="22" fill="url(#footGrad)"/>
@@ -900,17 +706,12 @@
 </footer>
 
 <script>
-// ── Translations ────────────────────────────────────────────────────────────
-const T = {
+// ── Page-specific translations ───────────────────────────────────────────────
+const PAGE_T = {
   en: {
     "meta.title":       "Lochord — M3U8 Playlist Manager for DAP | Free Desktop App",
     "meta.description": "Create M3U8 playlists on PC and copy to your DAP. Supports Astell&Kern, Shanling, HiBy, FiiO, Sony Walkman. Free, open-source, Windows/macOS/Linux.",
     "meta.keywords":    "M3U8 playlist manager, DAP playlist creator, Astell&Kern playlist, local music library, portable audio player software, HiBy playlist, FiiO playlist, free music manager",
-    "nav.features":"Features",
-    "nav.dap":         "For DAP",
-    "nav.guide":       "Guide",
-    "nav.download":    "Download",
-    "nav.downloadBtn": "↓ Download",
     "hero.badge":      "🎧 DAP-Ready \u00a0·\u00a0 Open Source \u00a0·\u00a0 Cross Platform",
     "hero.h1a":        "Create on PC,",
     "hero.h1b":        "Listen on Your DAP",
@@ -968,20 +769,12 @@ const T = {
     "dl.sourceLink":   "Source Code",
     "tech.title": "Built with modern technology",
     "tech.sub":   "Powered by Rust for performance, React for a smooth UI, and Tauri for a lightweight native shell.",
-    "footer.tagline":  "Local music library & M3U8 playlist manager",
-    "footer.releases": "Releases",
-    "footer.copy":     "© 2025–2026 kakeru-ikeda. Released under the MIT License.",
   },
 
   ja: {
     "meta.title":       "Lochord — DAP向けM3U8プレイリスト作成ソフト | 無料デスクトップアプリ",
     "meta.description": "PCでM3U8プレイリストを作成してDAPにコピー。Astell&Kern・Shanling・HiBy・FiiO・ソニーウォークマン対応。無料・オープンソース、Windows/macOS/Linux対応。",
     "meta.keywords":    "DAP プレイリスト, M3U8 プレイリスト作成, ポータブルオーディオ, Astell&Kern プレイリスト, HiBy 音楽管理, 無料 音楽管理ソフト, ハイレゾ プレイリスト",
-    "nav.features":    "機能",
-    "nav.dap":         "DAP 向け",
-    "nav.guide":       "使い方",
-    "nav.download":    "ダウンロード",
-    "nav.downloadBtn": "↓ ダウンロード",
     "hero.badge":      "🎧 DAP 対応 \u00a0·\u00a0 オープンソース \u00a0·\u00a0 クロスプラットフォーム",
     "hero.h1a":        "PC で作る、",
     "hero.h1b":        "DAP で聴く",
@@ -1039,20 +832,12 @@ const T = {
     "dl.sourceLink":   "ソースコード",
     "tech.title": "モダンな技術で構築されています",
     "tech.sub":   "パフォーマンスに Rust、スムーズな UI に React、軽量なシェルに Tauri を採用。",
-    "footer.tagline":  "ローカル音楽ライブラリ & M3U8 プレイリストマネージャー",
-    "footer.releases": "リリース",
-    "footer.copy":     "© 2025–2026 kakeru-ikeda. MIT ライセンスの下で公開。",
   },
 
   ko: {
     "meta.title":       "Lochord — DAP용 M3U8 플레이리스트 관리 앱 | 무료 데스크탑",
     "meta.description": "PC에서 M3U8 플레이리스트를 만들어 DAP에 복사하세요. Astell&Kern, Shanling, HiBy, FiiO, Sony Walkman 지원. 무료 오픈소스, Windows/macOS/Linux.",
     "meta.keywords":    "DAP 플레이리스트, M3U8 플레이리스트 생성, 포터블 오디오, Astell&Kern 플레이리스트, HiBy 음악 관리, 무료 음악 앱",
-    "nav.features":    "기능",
-    "nav.dap":         "DAP용",
-    "nav.guide":       "사용 방법",
-    "nav.download":    "다운로드",
-    "nav.downloadBtn": "↓ 다운로드",
     "hero.badge":      "🎧 DAP 지원 \u00a0·\u00a0 오픈소스 \u00a0·\u00a0 크로스 플랫폼",
     "hero.h1a":        "PC에서 만들고,",
     "hero.h1b":        "DAP에서 감상하세요",
@@ -1110,20 +895,12 @@ const T = {
     "dl.sourceLink":   "소스 코드",
     "tech.title": "최신 기술로 만들어졌습니다",
     "tech.sub":   "성능을 위한 Rust, 부드러운 UI를 위한 React, 가벼운 쉘을 위한 Tauri를 사용합니다.",
-    "footer.tagline":  "로컬 음악 라이브러리 & M3U8 플레이리스트 매니저",
-    "footer.releases": "릴리스",
-    "footer.copy":     "© 2025–2026 kakeru-ikeda. MIT 라이선스로 공개.",
   },
 
   zh: {
     "meta.title":       "Lochord — DAP 专用 M3U8 播放列表管理器 | 免费桌面应用",
     "meta.description": "在 PC 上创建 M3U8 播放列表并复制到 DAP。支持 Astell&Kern、Shanling、HiBy、FiiO、Sony Walkman。免费开源，支持 Windows/macOS/Linux。",
     "meta.keywords":    "M3U8 播放列表管理, DAP 播放列表, 随身听软件, Astell&Kern 播放列表, HiBy 音乐管理, 免费音乐管理器",
-    "nav.features":    "功能",
-    "nav.dap":         "DAP 专区",
-    "nav.guide":       "使用指南",
-    "nav.download":    "下载",
-    "nav.downloadBtn": "↓ 下载",
     "hero.badge":      "🎧 DAP 就绪 \u00a0·\u00a0 开源软件 \u00a0·\u00a0 跨平台",
     "hero.h1a":        "在 PC 上创建，",
     "hero.h1b":        "在 DAP 上聆听",
@@ -1181,77 +958,13 @@ const T = {
     "dl.sourceLink":   "源代码",
     "tech.title": "采用现代技术构建",
     "tech.sub":   "Rust 保障性能，React 提供流畅界面，Tauri 实现轻量原生外壳。",
-    "footer.tagline":  "本地音乐库 & M3U8 播放列表管理器",
-    "footer.releases": "版本发布",
-    "footer.copy":     "© 2025–2026 kakeru-ikeda. 基于 MIT 许可证发布。",
   },
 };
+</script>
+<script src="assets/translations.js"></script>
+<script src="assets/i18n.js"></script>
 
-const LANG_LABELS= { en: "EN", ja: "JA", ko: "KO", zh: "ZH" };
-const HTML_LANGS  = { en: "en", ja: "ja", ko: "ko", zh: "zh" };
-
-// ── Apply translations ───────────────────────────────────────────────────────
-function applyLang(lang) {
-  const dict = T[lang] || T.en;
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (dict[key] !== undefined) el.textContent = dict[key];
-  });
-  document.documentElement.lang = HTML_LANGS[lang] || 'en';
-  document.getElementById('currentLangLabel').textContent = LANG_LABELS[lang] || 'EN';
-  document.querySelectorAll('#langMenu button').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.lang === lang);
-  });
-  // ── Update SEO meta tags ─────────────────────────────────────────────────
-  if (dict['meta.title'])       { document.title = dict['meta.title']; document.getElementById('page-title').textContent = dict['meta.title']; document.getElementById('og-title').content = dict['meta.title']; document.getElementById('tw-title').content = dict['meta.title']; }
-  if (dict['meta.description']) { document.getElementById('meta-desc').content = dict['meta.description']; document.getElementById('og-desc').content = dict['meta.description']; document.getElementById('tw-desc').content = dict['meta.description']; }
-  if (dict['meta.keywords'])    { document.getElementById('meta-kw').content = dict['meta.keywords']; }
-  localStorage.setItem('lochord-lang', lang);
-  const url = new URL(location.href);
-  url.searchParams.set('lang', lang);
-  history.replaceState(null, '', url);
-  // propagate lang param to cross-page links
-  document.querySelectorAll('a[href]').forEach(a => {
-    try {
-      const u = new URL(a.href, location.href);
-      if (u.origin === location.origin) {
-        u.searchParams.set('lang', lang);
-        a.href = u.pathname + u.search + u.hash;
-      }
-    } catch {}
-  });
-}
-
-// ── Language switcher UI─────────────────────────────────────────────────────
-const switcher = document.getElementById('langSwitcher');
-const langBtn  = document.getElementById('langBtn');
-
-langBtn.addEventListener('click', e => {
-  e.stopPropagation();
-  switcher.classList.toggle('open');
-});
-
-document.addEventListener('click', () => switcher.classList.remove('open'));
-
-document.querySelectorAll('#langMenu button').forEach(btn => {
-  btn.addEventListener('click', e => {
-    e.stopPropagation();
-    applyLang(btn.dataset.lang);
-    switcher.classList.remove('open');
-  });
-});
-
-// ── Detect initial language ──────────────────────────────────────────────────
-(function initLang() {
-  const param    = new URLSearchParams(location.search).get('lang');
-  const saved    = localStorage.getItem('lochord-lang');
-  const browser  = (navigator.language || '').toLowerCase().slice(0, 2);
-  const detected = (param && T[param]) ? param
-                 : (saved && T[saved])  ? saved
-                 : (['ja','ko','zh'].includes(browser) ? browser : 'en');
-  applyLang(detected);
-})();
-
+<script>
 // ── Dynamic release links ────────────────────────────────────────────────────
 (async () => {
   try {
