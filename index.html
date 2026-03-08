@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Lochord — Local music library & M3U8 playlist manager. Scan your music collection, create playlists, and edit metadata with ease." />
+  <meta property="og:title" content="Lochord — Local Music Playlist Manager" />
+  <meta property="og:description" content="A cross-platform desktop app to manage your local music library and create M3U8 playlists." />
+  <meta property="og:image" content="https://raw.githubusercontent.com/kakeru-ikeda/Lochord/main/app-icon.svg" />
+  <title>Lochord — Local Music Playlist Manager</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #1a1a2e;
+      --surface:   #16213e;
+      --surface2:  #0f1729;
+      --accent:    #e94560;
+      --accent-h:  #ff5577;
+      --text:      #e0e0e0;
+      --muted:     #8892a4;
+      --border:    #2d3748;
+      --grad:      linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+      --radius:    10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(26, 26, 46, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-brand svg { width: 32px; height: 32px; flex-shrink: 0; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-h); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(233,69,96,0.4); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--muted); background: rgba(255,255,255,0.04); }
+
+    .btn-grad {
+      background: var(--grad);
+      color: #fff;
+      font-size: 1rem;
+      padding: 14px 32px;
+    }
+    .btn-grad:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 6px 28px rgba(124,58,237,0.45); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 140px 24px 100px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(233,69,96,0.15);
+      border: 1px solid rgba(233,69,96,0.3);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 24px;
+    }
+
+    .gradient-text {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 44px;
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .hero-version {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .hero-version span {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── App preview ── */
+    .app-preview {
+      max-width: 960px;
+      margin: 0 auto 100px;
+      padding: 0 24px;
+    }
+
+    .app-window {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+
+    .window-titlebar {
+      background: var(--surface2);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .window-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .dot-red    { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green  { background: #27c93f; }
+
+    .window-title {
+      flex: 1;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .app-ui {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      min-height: 380px;
+      font-size: 0.82rem;
+    }
+
+    .ui-sidebar {
+      background: var(--surface2);
+      border-right: 1px solid var(--border);
+      padding: 16px 12px;
+    }
+
+    .ui-sidebar-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+
+    .ui-playlist-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: background 0.15s, color 0.15s;
+      margin-bottom: 2px;
+    }
+    .ui-playlist-item.active { background: rgba(233,69,96,0.15); color: var(--accent); }
+    .ui-playlist-item:not(.active):hover { background: rgba(255,255,255,0.05); color: var(--text); }
+
+    .ui-main { padding: 16px; overflow: hidden; }
+
+    .ui-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .ui-header-title { font-weight: 700; font-size: 0.95rem; }
+
+    .save-badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .ui-track {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 6px;
+      border-radius: 6px;
+      border-bottom: 1px solid rgba(45,55,72,0.5);
+      color: var(--muted);
+    }
+    .ui-track:hover { background: rgba(255,255,255,0.04); }
+    .ui-track-num { font-size: 0.75rem; text-align: center; }
+    .ui-track-info { overflow: hidden; }
+    .ui-track-name { color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ui-track-artist { font-size: 0.75rem; }
+    .ui-track-dur { font-size: 0.75rem; font-variant-numeric: tabular-nums; }
+
+    .ui-library {
+      border-top: 1px solid var(--border);
+      margin-top: 12px;
+      padding-top: 12px;
+    }
+
+    .ui-library-header {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .ui-folder {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ── Features ── */
+    section { padding: 80px 24px; }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 60px;
+      font-size: 1rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-3px); }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(233,69,96,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      font-size: 1.3rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── Download ── */
+    #download { background: var(--surface2); }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto 48px;
+    }
+
+    .platform-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .platform-card:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-3px); }
+
+    .platform-icon { font-size: 2.6rem; margin-bottom: 14px; }
+
+    .platform-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .platform-card .formats {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .download-btns { display: flex; flex-direction: column; gap: 8px; }
+
+    .dl-btn {
+      display: block;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 10px 14px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text);
+      transition: all 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+    }
+    .dl-btn:hover { background: rgba(233,69,96,0.12); border-color: rgba(233,69,96,0.4); color: var(--accent); }
+    .dl-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .dl-btn.primary:hover { background: var(--accent-h); border-color: var(--accent-h); color: #fff; box-shadow: 0 4px 16px rgba(233,69,96,0.4); }
+
+    .release-note {
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .release-note a { color: var(--accent); font-weight: 600; transition: color 0.2s; }
+    .release-note a:hover { color: var(--accent-h); }
+
+    /* ── Tech stack ── */
+    .tech-section { padding: 60px 24px; }
+
+    .tech-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 18px;
+      font-size: 0.84rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--surface2);
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .footer-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand svg { width: 28px; height: 28px; }
+
+    footer p {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    footer a { color: var(--accent); font-weight: 600; transition: color 0.2s; }
+    footer a:hover { color: var(--accent-h); }
+
+    /* ── Loading state ── */
+    .loading { opacity: 0.5; pointer-events: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .nav-links a:not(:last-child) { display: none; }
+      .app-ui { grid-template-columns: 1fr; }
+      .ui-sidebar { display: none; }
+      .hero { padding: 110px 16px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <a href="#" class="nav-brand">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="22" fill="url(#navGrad)"/>
+      <rect x="20" y="30" width="12" height="50" rx="4" fill="white"/>
+      <rect x="38" y="18" width="12" height="62" rx="4" fill="white" opacity=".9"/>
+      <rect x="56" y="40" width="12" height="42" rx="4" fill="white" opacity=".8"/>
+      <rect x="74" y="25" width="12" height="55" rx="4" fill="white" opacity=".7"/>
+      <defs>
+        <linearGradient id="navGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#4F46E5"/>
+          <stop offset=".5" stop-color="#7C3AED"/>
+          <stop offset="1" stop-color="#EC4899"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    Lochord
+  </a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#download">Download</a>
+    <a href="https://github.com/kakeru-ikeda/Lochord" target="_blank" rel="noopener">GitHub</a>
+    <a href="#download" class="btn btn-primary" style="padding:6px 16px;font-size:0.85rem;">
+      ↓ Download
+    </a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-badge">🎵 Open Source &nbsp;·&nbsp; Cross Platform</div>
+  <h1>
+    Your Local Music,<br/>
+    <span class="gradient-text">Perfectly Organized</span>
+  </h1>
+  <p>
+    Lochord is a fast, beautiful desktop app for managing your local music library and creating M3U8 playlists — with drag‑and‑drop, metadata editing, and multi-language support.
+  </p>
+  <div class="hero-actions">
+    <a href="#download" class="btn btn-grad">↓ Download Free</a>
+    <a href="https://github.com/kakeru-ikeda/Lochord" class="btn btn-outline" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+  <p class="hero-version">Latest: <span id="latest-version">v0.0.3-beta</span></p>
+</section>
+
+<!-- ── App Preview ── -->
+<div class="app-preview">
+  <div class="app-window">
+    <div class="window-titlebar">
+      <div class="window-dot dot-red"></div>
+      <div class="window-dot dot-yellow"></div>
+      <div class="window-dot dot-green"></div>
+      <div class="window-title">Lochord</div>
+    </div>
+    <div class="app-ui">
+      <div class="ui-sidebar">
+        <div class="ui-sidebar-title">Playlists</div>
+        <div class="ui-playlist-item active">
+          <span>🎵</span> Favorites
+        </div>
+        <div class="ui-playlist-item">
+          <span>🎵</span> Work BGM
+        </div>
+        <div class="ui-playlist-item">
+          <span>🎵</span> Late Night
+        </div>
+        <div style="margin-top:12px">
+          <div class="ui-playlist-item" style="gap:6px;font-size:0.8rem;">
+            <span style="font-size:1rem">＋</span> New Playlist
+          </div>
+        </div>
+      </div>
+      <div class="ui-main">
+        <div class="ui-header">
+          <div class="ui-header-title">Favorites</div>
+          <div class="save-badge">Saved</div>
+        </div>
+        <div class="ui-track">
+          <div class="ui-track-num">1</div>
+          <div class="ui-track-info">
+            <div class="ui-track-name">Moonlit Reverie</div>
+            <div class="ui-track-artist">Aurora Sounds · Ambient Collection</div>
+          </div>
+          <div class="ui-track-dur">4:13</div>
+        </div>
+        <div class="ui-track">
+          <div class="ui-track-num">2</div>
+          <div class="ui-track-info">
+            <div class="ui-track-name">Cascade Falls</div>
+            <div class="ui-track-artist">NightWave · Deep Blue</div>
+          </div>
+          <div class="ui-track-dur">5:41</div>
+        </div>
+        <div class="ui-track">
+          <div class="ui-track-num">3</div>
+          <div class="ui-track-info">
+            <div class="ui-track-name">Distant Echoes</div>
+            <div class="ui-track-artist">Sora & Cloud · Horizons</div>
+          </div>
+          <div class="ui-track-dur">3:58</div>
+        </div>
+        <div class="ui-track">
+          <div class="ui-track-num">4</div>
+          <div class="ui-track-info">
+            <div class="ui-track-name">Static Dreams</div>
+            <div class="ui-track-artist">Elara · White Noise EP</div>
+          </div>
+          <div class="ui-track-dur">6:02</div>
+        </div>
+        <div class="ui-library">
+          <div class="ui-library-header">📂 Library — /Music</div>
+          <div class="ui-folder">📁 Aurora Sounds · Ambient Collection (2024) [FLAC]</div>
+          <div class="ui-folder">📁 NightWave · Deep Blue (2023) [MP3]</div>
+          <div class="ui-folder" style="color:var(--muted);opacity:.6">📁 Sora &amp; Cloud · Horizons (2025) [FLAC]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Features ── -->
+<section id="features">
+  <h2 class="section-title">Everything you need to manage your music</h2>
+  <p class="section-sub">Lochord gives you full control over your local music collection without any cloud subscription.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📚</div>
+      <h3>Library Scanner</h3>
+      <p>Recursively scans your music directory and displays it as a clean folder tree. Supports FLAC, MP3, AAC, WAV, M4A, OGG, and OPUS.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎛️</div>
+      <h3>Drag & Drop Playlists</h3>
+      <p>Create M3U8 playlists by dragging tracks from your library. Reorder songs, remove tracks, and save with one click.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏷️</div>
+      <h3>Metadata Editor</h3>
+      <p>Edit ID3 tags for title, artist, album, genre, year, BPM, lyrics and more. Preview and swap cover art. Batch‑edit multiple tracks at once.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌗</div>
+      <h3>Dark / Light Theme</h3>
+      <p>Ships with a gorgeous dark theme and a clean light mode. Follows your system preference automatically.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌍</div>
+      <h3>Multi-language</h3>
+      <p>Full UI support for English, Japanese (日本語), Korean (한국어), and Chinese (中文). More languages welcome.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💻</div>
+      <h3>Cross-Platform</h3>
+      <p>Native desktop app built with Tauri + Rust — runs on Windows, macOS, and Linux with a tiny install footprint.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Download ── -->
+<section id="download">
+  <h2 class="section-title">Download Lochord</h2>
+  <p class="section-sub">Free and open source. Pick your platform and get started in seconds.</p>
+
+  <div class="download-grid">
+    <!-- Windows -->
+    <div class="platform-card">
+      <div class="platform-icon">🪟</div>
+      <h3>Windows</h3>
+      <p class="formats">Windows 10 / 11 &nbsp;·&nbsp; x64</p>
+      <div class="download-btns">
+        <a id="win-exe" href="https://github.com/kakeru-ikeda/Lochord/releases/download/v0.0.3-beta/Lochord_0.0.3_x64-setup.exe" class="dl-btn primary">
+          ↓ Installer (.exe)
+        </a>
+        <a id="win-msi" href="https://github.com/kakeru-ikeda/Lochord/releases/download/v0.0.3-beta/Lochord_0.0.3_x64_en-US.msi" class="dl-btn">
+          ↓ MSI Package
+        </a>
+      </div>
+    </div>
+
+    <!-- macOS -->
+    <div class="platform-card">
+      <div class="platform-icon">🍎</div>
+      <h3>macOS</h3>
+      <p class="formats">Apple Silicon (M1/M2/M3)</p>
+      <div class="download-btns">
+        <a id="mac-dmg" href="https://github.com/kakeru-ikeda/Lochord/releases/download/v0.0.3-beta/Lochord_0.0.3-beta_aarch64.dmg" class="dl-btn primary">
+          ↓ DMG (Apple Silicon)
+        </a>
+        <a id="mac-tar" href="https://github.com/kakeru-ikeda/Lochord/releases/download/v0.0.3-beta/Lochord_aarch64.app.tar.gz" class="dl-btn">
+          ↓ App Archive (.tar.gz)
+        </a>
+      </div>
+    </div>
+
+    <!-- Linux -->
+    <div class="platform-card">
+      <div class="platform-icon">🐧</div>
+      <h3>Linux</h3>
+      <p class="formats">Ubuntu, Debian, Fedora &nbsp;·&nbsp; x64</p>
+      <div class="download-btns">
+        <a id="linux-appimage" href="https://github.com/kakeru-ikeda/Lochord/releases/download/v0.0.3-beta/Lochord_0.0.3-beta_amd64.AppImage" class="dl-btn primary">
+          ↓ AppImage
+        </a>
+        <a id="linux-deb" href="https://github.com/kakeru-ikeda/Lochord/releases/download/v0.0.3-beta/Lochord_0.0.3-beta_amd64.deb" class="dl-btn">
+          ↓ .deb Package
+        </a>
+        <a id="linux-rpm" href="https://github.com/kakeru-ikeda/Lochord/releases/download/v0.0.3-beta/Lochord-0.0.3-beta-1.x86_64.rpm" class="dl-btn">
+          ↓ .rpm Package
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <p class="release-note">
+    All releases on
+    <a href="https://github.com/kakeru-ikeda/Lochord/releases" target="_blank" rel="noopener">GitHub Releases</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/kakeru-ikeda/Lochord" target="_blank" rel="noopener">Source Code</a>
+    &nbsp;·&nbsp; MIT License
+  </p>
+</section>
+
+<!-- ── Tech Stack ── -->
+<section class="tech-section">
+  <h2 class="section-title" style="margin-bottom:12px">Built with modern technology</h2>
+  <p class="section-sub" style="margin-bottom:36px">Powered by Rust for performance, React for a smooth UI, and Tauri for a lightweight native shell.</p>
+  <div class="tech-chips">
+    <span class="chip">Tauri v2</span>
+    <span class="chip">Rust</span>
+    <span class="chip">React 19</span>
+    <span class="chip">TypeScript</span>
+    <span class="chip">Zustand</span>
+    <span class="chip">dnd-kit</span>
+    <span class="chip">Vite</span>
+    <span class="chip">lofty (audio tags)</span>
+    <span class="chip">M3U8</span>
+    <span class="chip">MIT License</span>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-brand">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="22" fill="url(#footGrad)"/>
+      <rect x="20" y="30" width="12" height="50" rx="4" fill="white"/>
+      <rect x="38" y="18" width="12" height="62" rx="4" fill="white" opacity=".9"/>
+      <rect x="56" y="40" width="12" height="42" rx="4" fill="white" opacity=".8"/>
+      <rect x="74" y="25" width="12" height="55" rx="4" fill="white" opacity=".7"/>
+      <defs>
+        <linearGradient id="footGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#4F46E5"/>
+          <stop offset=".5" stop-color="#7C3AED"/>
+          <stop offset="1" stop-color="#EC4899"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    Lochord
+  </div>
+  <p>Local music library &amp; M3U8 playlist manager</p>
+  <p>
+    <a href="https://github.com/kakeru-ikeda/Lochord" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/kakeru-ikeda/Lochord/releases" target="_blank" rel="noopener">Releases</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/kakeru-ikeda/Lochord/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+  </p>
+  <p style="margin-top:16px;font-size:0.78rem;opacity:.5">© 2025–2026 kakeru-ikeda. Released under the MIT License.</p>
+</footer>
+
+<script>
+  // Dynamically load the latest release info from GitHub API
+  (async () => {
+    try {
+      const res = await fetch('https://api.github.com/repos/kakeru-ikeda/Lochord/releases/latest');
+      if (!res.ok) return;
+      const release = await res.json();
+
+      const tag = release.tag_name;
+      const ver = tag.replace(/^v/, '');
+
+      document.getElementById('latest-version').textContent = tag;
+
+      const findAsset = (patterns) => {
+        for (const p of patterns) {
+          const a = release.assets.find(a => a.name.match(p));
+          if (a) return a.browser_download_url;
+        }
+        return null;
+      };
+
+      const set = (id, url) => {
+        if (!url) return;
+        const el = document.getElementById(id);
+        if (el) el.href = url;
+      };
+
+      set('win-exe',        findAsset([/_x64-setup\.exe$/]));
+      set('win-msi',        findAsset([/_x64_en-US\.msi$/]));
+      set('mac-dmg',        findAsset([/aarch64\.dmg$/]));
+      set('mac-tar',        findAsset([/aarch64\.app\.tar\.gz$/]));
+      set('linux-appimage', findAsset([/amd64\.AppImage$/]));
+      set('linux-deb',      findAsset([/amd64\.deb$/]));
+      set('linux-rpm',      findAsset([/x86_64\.rpm$/, /x86_64\.rpm$/]));
+
+    } catch (_) {
+      // Silently fall back to static links baked into HTML
+    }
+  })();
+</script>
+
+</body>
+</html>
