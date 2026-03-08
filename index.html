@@ -3,11 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Lochord — Local music library & M3U8 playlist manager." />
-  <meta property="og:title" content="Lochord — Local Music Playlist Manager" />
-  <meta property="og:description" content="A cross-platform desktop app to manage your local music library and create M3U8 playlists." />
-  <meta property="og:image" content="https://raw.githubusercontent.com/kakeru-ikeda/Lochord/main/app-icon.svg" />
-  <title>Lochord — Local Music Playlist Manager</title>
+  <meta name="description" id="meta-desc" content="Create M3U8 playlists on PC and copy to your DAP. Supports Astell&amp;Kern, Shanling, HiBy, FiiO, Sony Walkman. Free, open-source, Windows/macOS/Linux." />
+  <meta name="keywords"    id="meta-kw"   content="M3U8 playlist manager, DAP playlist creator, Astell&Kern playlist, local music library, portable audio player software, HiBy playlist, FiiO playlist, free music manager" />
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://kakeru-ikeda.github.io/lochord-landing/" />
+  <meta property="og:title"       id="og-title" content="Lochord — M3U8 Playlist Manager for DAP" />
+  <meta property="og:description" id="og-desc"  content="Create M3U8 playlists on PC and copy to your DAP. Supports Astell&amp;Kern, Shanling, HiBy, FiiO. Free &amp; open-source." />
+  <meta property="og:image"       content="https://raw.githubusercontent.com/kakeru-ikeda/Lochord/main/app-icon.svg" />
+  <meta name="twitter:card"        content="summary" />
+  <meta name="twitter:title"       id="tw-title" content="Lochord — M3U8 Playlist Manager for DAP" />
+  <meta name="twitter:description" id="tw-desc"  content="Create M3U8 playlists on PC and copy to your DAP. Supports Astell&amp;Kern, Shanling, HiBy, FiiO. Free &amp; open-source." />
+  <link rel="canonical" href="https://kakeru-ikeda.github.io/lochord-landing/" />
+  <link rel="alternate" hreflang="en" href="https://kakeru-ikeda.github.io/lochord-landing/?lang=en" />
+  <link rel="alternate" hreflang="ja" href="https://kakeru-ikeda.github.io/lochord-landing/?lang=ja" />
+  <link rel="alternate" hreflang="ko" href="https://kakeru-ikeda.github.io/lochord-landing/?lang=ko" />
+  <link rel="alternate" hreflang="zh" href="https://kakeru-ikeda.github.io/lochord-landing/?lang=zh" />
+  <link rel="alternate" hreflang="x-default" href="https://kakeru-ikeda.github.io/lochord-landing/" />
+  <title id="page-title">Lochord — M3U8 Playlist Manager for DAP</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSJ1cmwoI2cpIi8+PHJlY3QgeD0iMjAiIHk9IjMwIiB3aWR0aD0iMTIiIGhlaWdodD0iNTAiIHJ4PSI0IiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjM4IiB5PSIxOCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjYyIiByeD0iNCIgZmlsbD0id2hpdGUiIG9wYWNpdHk9Ii45Ii8+PHJlY3QgeD0iNTYiIHk9IjQwIiB3aWR0aD0iMTIiIGhlaWdodD0iNDIiIHJ4PSI0IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iLjgiLz48cmVjdCB4PSI3NCIgeT0iMjUiIHdpZHRoPSIxMiIgaGVpZ2h0PSI1NSIgcng9IjQiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIuNyIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMTAwIiB5Mj0iMTAwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzRGNDZFNSIvPjxzdG9wIG9mZnNldD0iLjUiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNFQzQ4OTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4=">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -891,7 +903,10 @@
 // ── Translations ────────────────────────────────────────────────────────────
 const T = {
   en: {
-    "nav.features":    "Features",
+    "meta.title":       "Lochord — M3U8 Playlist Manager for DAP | Free Desktop App",
+    "meta.description": "Create M3U8 playlists on PC and copy to your DAP. Supports Astell&Kern, Shanling, HiBy, FiiO, Sony Walkman. Free, open-source, Windows/macOS/Linux.",
+    "meta.keywords":    "M3U8 playlist manager, DAP playlist creator, Astell&Kern playlist, local music library, portable audio player software, HiBy playlist, FiiO playlist, free music manager",
+    "nav.features":"Features",
     "nav.dap":         "For DAP",
     "nav.guide":       "Guide",
     "nav.download":    "Download",
@@ -959,6 +974,9 @@ const T = {
   },
 
   ja: {
+    "meta.title":       "Lochord — DAP向けM3U8プレイリスト作成ソフト | 無料デスクトップアプリ",
+    "meta.description": "PCでM3U8プレイリストを作成してDAPにコピー。Astell&Kern・Shanling・HiBy・FiiO・ソニーウォークマン対応。無料・オープンソース、Windows/macOS/Linux対応。",
+    "meta.keywords":    "DAP プレイリスト, M3U8 プレイリスト作成, ポータブルオーディオ, Astell&Kern プレイリスト, HiBy 音楽管理, 無料 音楽管理ソフト, ハイレゾ プレイリスト",
     "nav.features":    "機能",
     "nav.dap":         "DAP 向け",
     "nav.guide":       "使い方",
@@ -1027,6 +1045,9 @@ const T = {
   },
 
   ko: {
+    "meta.title":       "Lochord — DAP용 M3U8 플레이리스트 관리 앱 | 무료 데스크탑",
+    "meta.description": "PC에서 M3U8 플레이리스트를 만들어 DAP에 복사하세요. Astell&Kern, Shanling, HiBy, FiiO, Sony Walkman 지원. 무료 오픈소스, Windows/macOS/Linux.",
+    "meta.keywords":    "DAP 플레이리스트, M3U8 플레이리스트 생성, 포터블 오디오, Astell&Kern 플레이리스트, HiBy 음악 관리, 무료 음악 앱",
     "nav.features":    "기능",
     "nav.dap":         "DAP용",
     "nav.guide":       "사용 방법",
@@ -1095,6 +1116,9 @@ const T = {
   },
 
   zh: {
+    "meta.title":       "Lochord — DAP 专用 M3U8 播放列表管理器 | 免费桌面应用",
+    "meta.description": "在 PC 上创建 M3U8 播放列表并复制到 DAP。支持 Astell&Kern、Shanling、HiBy、FiiO、Sony Walkman。免费开源，支持 Windows/macOS/Linux。",
+    "meta.keywords":    "M3U8 播放列表管理, DAP 播放列表, 随身听软件, Astell&Kern 播放列表, HiBy 音乐管理, 免费音乐管理器",
     "nav.features":    "功能",
     "nav.dap":         "DAP 专区",
     "nav.guide":       "使用指南",
@@ -1178,6 +1202,10 @@ function applyLang(lang) {
   document.querySelectorAll('#langMenu button').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
+  // ── Update SEO meta tags ─────────────────────────────────────────────────
+  if (dict['meta.title'])       { document.title = dict['meta.title']; document.getElementById('page-title').textContent = dict['meta.title']; document.getElementById('og-title').content = dict['meta.title']; document.getElementById('tw-title').content = dict['meta.title']; }
+  if (dict['meta.description']) { document.getElementById('meta-desc').content = dict['meta.description']; document.getElementById('og-desc').content = dict['meta.description']; document.getElementById('tw-desc').content = dict['meta.description']; }
+  if (dict['meta.keywords'])    { document.getElementById('meta-kw').content = dict['meta.keywords']; }
   localStorage.setItem('lochord-lang', lang);
   const url = new URL(location.href);
   url.searchParams.set('lang', lang);

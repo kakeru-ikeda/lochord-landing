@@ -3,8 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Lochord Guide — How to use Lochord to manage your music library and create M3U8 playlists for DAP." />
-  <title data-i18n="meta.title">Lochord — How to Use</title>
+  <meta name="description" id="meta-desc" content="Step-by-step guide to install Lochord, scan your music library, create M3U8 playlists, edit ID3 metadata, and deploy to your DAP (Astell&amp;Kern, Shanling, HiBy, FiiO)." />
+  <meta name="keywords"    id="meta-kw"   content="Lochord guide, M3U8 playlist tutorial, DAP playlist setup, music library management, ID3 metadata editor, Astell&Kern guide" />
+  <meta property="og:type"        content="article" />
+  <meta property="og:url"         content="https://kakeru-ikeda.github.io/lochord-landing/guide.html" />
+  <meta property="og:title"       id="og-title" content="Lochord Guide — How to Create DAP Playlists" />
+  <meta property="og:description" id="og-desc"  content="Step-by-step guide: install, scan library, build M3U8 playlists, edit metadata, copy to DAP." />
+  <meta property="og:image"       content="https://raw.githubusercontent.com/kakeru-ikeda/Lochord/main/app-icon.svg" />
+  <meta name="twitter:card"        content="summary" />
+  <meta name="twitter:title"       id="tw-title" content="Lochord Guide — How to Create DAP Playlists" />
+  <meta name="twitter:description" id="tw-desc"  content="Step-by-step guide: install, scan library, build M3U8 playlists, edit metadata, copy to DAP." />
+  <link rel="canonical" href="https://kakeru-ikeda.github.io/lochord-landing/guide.html" />
+  <link rel="alternate" hreflang="en" href="https://kakeru-ikeda.github.io/lochord-landing/guide.html?lang=en" />
+  <link rel="alternate" hreflang="ja" href="https://kakeru-ikeda.github.io/lochord-landing/guide.html?lang=ja" />
+  <link rel="alternate" hreflang="ko" href="https://kakeru-ikeda.github.io/lochord-landing/guide.html?lang=ko" />
+  <link rel="alternate" hreflang="zh" href="https://kakeru-ikeda.github.io/lochord-landing/guide.html?lang=zh" />
+  <link rel="alternate" hreflang="x-default" href="https://kakeru-ikeda.github.io/lochord-landing/guide.html" />
+  <title id="page-title" data-i18n="meta.title">Lochord — How to Use</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSJ1cmwoI2cpIi8+PHJlY3QgeD0iMjAiIHk9IjMwIiB3aWR0aD0iMTIiIGhlaWdodD0iNTAiIHJ4PSI0IiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjM4IiB5PSIxOCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjYyIiByeD0iNCIgZmlsbD0id2hpdGUiIG9wYWNpdHk9Ii45Ii8+PHJlY3QgeD0iNTYiIHk9IjQwIiB3aWR0aD0iMTIiIGhlaWdodD0iNDIiIHJ4PSI0IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iLjgiLz48cmVjdCB4PSI3NCIgeT0iMjUiIHdpZHRoPSIxMiIgaGVpZ2h0PSI1NSIgcng9IjQiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIuNyIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMTAwIiB5Mj0iMTAwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzRGNDZFNSIvPjxzdG9wIG9mZnNldD0iLjUiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNFQzQ4OTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4=">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -784,7 +799,9 @@ const T = {
   en: {
     "nav.features": "Features", "nav.dap": "For DAP", "nav.guide": "Guide",
     "nav.download": "Download", "nav.downloadBtn": "↓ Download",
-    "meta.title":   "Lochord — How to Use",
+    "meta.title":   "Lochord — How to Use | DAP Playlist Step-by-Step Guide",
+    "meta.description": "Step-by-step guide to install Lochord, scan your music library, build M3U8 playlists, edit ID3 metadata, and deploy to your DAP (Astell&Kern, Shanling, HiBy, FiiO).",
+    "meta.keywords":    "Lochord guide, M3U8 playlist tutorial, DAP playlist setup, music library management, ID3 metadata editor, Astell&Kern guide",
     "guide.title":  "How to Use Lochord",
     "guide.sub":    "From install to your first DAP-ready playlist in 5 minutes.",
     "guide.toc":    "Contents",
@@ -845,7 +862,9 @@ const T = {
   ja: {
     "nav.features": "機能", "nav.dap": "DAP 向け", "nav.guide": "使い方",
     "nav.download": "ダウンロード", "nav.downloadBtn": "↓ ダウンロード",
-    "meta.title":   "Lochord — 使い方ガイド",
+    "meta.title":   "Lochord 使い方ガイド — DAPプレイリスト作成の手順",
+    "meta.description": "Lochordのインストールから音楽ライブラリのスキャン、M3U8プレイリスト作成、IDタグ編集、DAPへの転送まで、ステップバイステップで解説。",
+    "meta.keywords":    "Lochord 使い方, DAP プレイリスト 作成方法, M3U8 プレイリスト 手順, 音楽ライブラリ管理, IDタグ編集",
     "guide.title":  "Lochord の使い方",
     "guide.sub":    "インストールから最初の DAP 用プレイリスト作成まで、5 分で完了。",
     "guide.toc":    "目次",
@@ -906,7 +925,9 @@ const T = {
   ko: {
     "nav.features": "기능", "nav.dap": "DAP용", "nav.guide": "사용 방법",
     "nav.download": "다운로드", "nav.downloadBtn": "↓ 다운로드",
-    "meta.title":   "Lochord — 사용 방법",
+    "meta.title":   "Lochord 사용 가이드 — DAP 플레이리스트 만들기",
+    "meta.description": "Lochord 설치부터 음악 라이브러리 스캔, M3U8 플레이리스트 생성, ID3 메타데이터 편집, DAP 전송까지 단계별 안내.",
+    "meta.keywords":    "Lochord 가이드, DAP 플레이리스트 만들기, M3U8 플레이리스트 튜토리얼, 음악 라이브러리 관리, ID3 태그 편집",
     "guide.title":  "Lochord 사용 방법",
     "guide.sub":    "설치부터 첫 DAP 플레이리스트 완성까지 5분이면 충분합니다.",
     "guide.toc":    "목차",
@@ -967,7 +988,9 @@ const T = {
   zh: {
     "nav.features": "功能", "nav.dap": "DAP 专区", "nav.guide": "使用指南",
     "nav.download": "下载", "nav.downloadBtn": "↓ 下载",
-    "meta.title":   "Lochord — 使用指南",
+    "meta.title":   "Lochord 使用指南 — DAP 播放列表创建教程",
+    "meta.description": "从安装 Lochord、扫描音乐库、创建 M3U8 播放列表、编辑 ID3 元数据，到将播放列表复制到 DAP 的完整步骤说明。",
+    "meta.keywords":    "Lochord 使用教程, DAP 播放列表创建, M3U8 播放列表教程, 音乐库管理, ID3 标签编辑",
     "guide.title":  "Lochord 使用指南",
     "guide.sub":    "从安装到生成第一个 DAP 可用的播放列表，5 分钟搞定。",
     "guide.toc":    "目录",
@@ -1037,6 +1060,10 @@ function applyLang(lang) {
   });
   document.documentElement.lang = HTML_LANGS[lang] || 'en';
   document.getElementById('currentLangLabel').textContent = LANG_LABELS[lang] || 'EN';
+  // ── Update SEO meta tags ─────────────────────────────────────────────────
+  if (dict['meta.title'])       { document.title = dict['meta.title']; document.getElementById('og-title').content = dict['meta.title']; document.getElementById('tw-title').content = dict['meta.title']; }
+  if (dict['meta.description']) { document.getElementById('meta-desc').content = dict['meta.description']; document.getElementById('og-desc').content = dict['meta.description']; document.getElementById('tw-desc').content = dict['meta.description']; }
+  if (dict['meta.keywords'])    { document.getElementById('meta-kw').content = dict['meta.keywords']; }
   document.querySelectorAll('#langMenu button').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   localStorage.setItem('lochord-lang', lang);
   const url = new URL(location.href);
