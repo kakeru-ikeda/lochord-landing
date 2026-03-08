@@ -8,6 +8,7 @@
   <meta property="og:description" content="A cross-platform desktop app to manage your local music library and create M3U8 playlists." />
   <meta property="og:image" content="https://raw.githubusercontent.com/kakeru-ikeda/Lochord/main/app-icon.svg" />
   <title>Lochord — Local Music Playlist Manager</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSJ1cmwoI2cpIi8+PHJlY3QgeD0iMjAiIHk9IjMwIiB3aWR0aD0iMTIiIGhlaWdodD0iNTAiIHJ4PSI0IiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjM4IiB5PSIxOCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjYyIiByeD0iNCIgZmlsbD0id2hpdGUiIG9wYWNpdHk9Ii45Ii8+PHJlY3QgeD0iNTYiIHk9IjQwIiB3aWR0aD0iMTIiIGhlaWdodD0iNDIiIHJ4PSI0IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iLjgiLz48cmVjdCB4PSI3NCIgeT0iMjUiIHdpZHRoPSIxMiIgaGVpZ2h0PSI1NSIgcng9IjQiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIuNyIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMTAwIiB5Mj0iMTAwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzRGNDZFNSIvPjxzdG9wIG9mZnNldD0iLjUiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNFQzQ4OTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4=">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -77,6 +78,9 @@
       transition: color 0.2s, background 0.2s;
     }
     .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+    /* Override: btn-primary inside nav must stay white */
+    .nav-links .btn-primary,
+    .nav-links .btn-primary:hover { color: #fff; }
 
     /* Language switcher */
     .lang-switcher {
@@ -92,7 +96,7 @@
       border: 1px solid var(--border);
       border-radius: 7px;
       color: var(--text);
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 600;
       padding: 5px 10px;
       cursor: pointer;
